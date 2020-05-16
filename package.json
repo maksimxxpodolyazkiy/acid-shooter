@@ -1,0 +1,26 @@
+{
+  "name": "acid-shooter",
+  "version": "1.0.0",
+  "description": "First web game",
+  "main": "acid-shooter.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "open": "google-chrome file:///home/oadmin/PRG/matter-space-shooter/dist/index.html"
+  },
+  "dependencies": {
+    "keymaster": "^1.6.2",
+    "matter-js": "^0.14.2"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.5.3",
+    "html-webpack-plugin": "^4.3.0",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "author": "maksim.podolyazkiy@gmail.com",
+  "license": "ISC"
+}
