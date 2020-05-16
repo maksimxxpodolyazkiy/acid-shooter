@@ -1,5 +1,4 @@
-import './styles/styles.css'
-import Matter, { Events } from 'matter-js'
+import Matter, { Events, Body } from 'matter-js'
 import key from 'keymaster'
 
 const Engine = Matter.Engine,
@@ -18,6 +17,7 @@ const Engine = Matter.Engine,
     Constraint = Matter.Constraint;
 const engine = Engine.create();
 const world = engine.world;
+world.gravity.y = 0;
 const render = Render.create({
     element: document.body,
     engine,
@@ -46,106 +46,72 @@ const viewportCentre = {
     y: render.options.height * 0.5
 };
 
-const shooter = Bodies.rectangle(viewportCentre.x, viewportCentre.y, 40, 40, {
-    // vertices: [viewportCentre],
-    isStatic: true
-});
-
-const body = [...ground, shooter];
-
-var mouse = Mouse.create(render.canvas),
-mouseConstraint = MouseConstraint.create(engine, {
-    mouse,
-    constraint: {
-        stiffness: 0.2,
-        render: {
-            visible: false
-        }
-    }
-});
+const shooter = Bodies.rectangle(viewportCentre.x, viewportCentre.y, 40, 40);
+const box = Bodies.rectangle(200,200,60,40)
+const body = [...ground, shooter, box];
 
 world.bounds.min.x = -300;
 world.bounds.min.y = -300;
 world.bounds.max.x = 1100;
 world.bounds.max.y = 900;
 
-let direction = null;
+// let direction = null;
 const vectors = {
-    up: Vector.create(0, -1),
-    down: Vector.create(0, 1),
-    left: Vector.create(-1, 0),
-    right: Vector.create(1, 0)
+    up: Vector.create(0, -3),
+    down: Vector.create(0, 3),
+    left: Vector.create(-3, 0),
+    right: Vector.create(3, 0)
 }
 
-Events.on(engine, 'beforeTick', function() {
-    const mouse = mouseConstraint.mouse;
-    // create a vector to translate the view, allowing the user to control view speed
-    const deltaCentre = Vector.sub(mouse.absolute, viewportCentre);
-
-    
-    // translate the view if mouse has moved over 50px from the centre of viewport
-    direction = Vector.normalise(deltaCentre);
-
-    
+Events.on(engine, "afterUpdate", function() {
     // up
     if (key.isPressed('w')) {
-        direction = vectors.up
+        Body.setVelocity(shooter, vectors.up)
     }
 
     // down
     if (key.isPressed('s')) {
-        direction = vectors.down
+        Body.setVelocity(shooter, vectors.down)
     }
     
     // left
     if (key.isPressed('a')) {
-        direction = vectors.left
+        Body.setVelocity(shooter, vectors.left)
     }
-    
+
     // right
     if (key.isPressed('d')) {
-        direction = vectors.right
+        Body.setVelocity(shooter, vectors.right)
     }
 
     // up left
     if (key.isPressed('w') && key.isPressed('a')) {
-        direction = Vector.add(vectors.up, vectors.left)
+        Body.setVelocity(shooter, Vector.add(vectors.up, vectors.left))
     }
 
     // up right
     if (key.isPressed('w') && key.isPressed('d')) {
-        direction = Vector.add(vectors.up, vectors.right)
+        Body.setVelocity(shooter, Vector.add(vectors.up, vectors.right))
     }
 
     // down left
     if (key.isPressed('s') && key.isPressed('a')) {
-        direction = Vector.add(vectors.down, vectors.left)
+        Body.setVelocity(shooter, Vector.add(vectors.down, vectors.left))
     }
 
     // down right
     if (key.isPressed('s') && key.isPressed('d')) {
-        direction = Vector.add(vectors.down, vectors.right)
+        Body.setVelocity(shooter, Vector.add(vectors.down, vectors.right))
     }
-    const translate = Vector.mult(direction, 3);
 
-    // prevent the view moving outside the world bounds
-    // if (render.bounds.min.x + translate.x < world.bounds.min.x)
-    //     translate.x = world.bounds.min.x - render.bounds.min.x;
 
-    // if (render.bounds.max.x + translate.x > world.bounds.max.x)
-    //     translate.x = world.bounds.max.x - render.bounds.max.x;
+    Bounds.shift(render.bounds, {
+        x: shooter.position.x - viewportCentre.x,
+        y: shooter.position.y - viewportCentre.y
+    });
 
-    // if (render.bounds.min.y + translate.y < world.bounds.min.y)
-    //     translate.y = world.bounds.min.y - render.bounds.min.y;
-
-    // if (render.bounds.max.y + translate.y > world.bounds.max.y)
-    //     translate.y = world.bounds.max.y - render.bounds.max.y;
-
-    // move the view
-    Bounds.translate(render.bounds, translate);
-
-    Mouse.setOffset(mouse, render.bounds.min);
 })
+
 
 
 
@@ -160,7 +126,6 @@ Events.on(engine, 'beforeTick', function() {
 //         }
 //     }))
 // })
-
 
 
 
