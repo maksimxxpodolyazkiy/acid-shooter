@@ -14,6 +14,7 @@ const Engine = Matter.Engine,
     Bounds = Matter.Bounds,
     Bodies = Matter.Bodies,
     Axes = Matter.Axes,
+    Svg = Matter.Svg,
     Constraint = Matter.Constraint;
 const engine = Engine.create();
 const world = engine.world;
@@ -25,15 +26,17 @@ const render = Render.create({
         width: 800,
         height: 600,
         hasBounds: true,
-        showVelocity: true
+        showVelocity: true,
+        wireframes: false
     }
 });
 
 
 Render.run(render);
-
 const runner = Runner.create();
 Runner.run(runner, engine);
+
+const shooterPath = document.querySelector('.shooter-path');
 
 const bottomSide = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 const topSide = Bodies.rectangle(400, -10, 810, 60, { isStatic: true });
@@ -46,9 +49,18 @@ const viewportCentre = {
     y: render.options.height * 0.5
 };
 
-const shooter = Bodies.rectangle(viewportCentre.x, viewportCentre.y, 40, 40);
-const box = Bodies.rectangle(200,200,60,40)
-const body = [...ground, shooter, box];
+const box = Bodies.rectangle(200,200,60,40);
+const shooter = Bodies.circle(viewportCentre.x, viewportCentre.y, 46, {
+    render: {
+      sprite: {
+        texture: '../images/shooter.png',
+        xScale: 0.5,
+        yScale: 0.5
+      }
+    }
+  })
+
+const body = [...ground, box, shooter];
 
 world.bounds.min.x = -300;
 world.bounds.min.y = -300;
