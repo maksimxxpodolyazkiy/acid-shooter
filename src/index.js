@@ -66,21 +66,27 @@ const shooter = Bodies.circle(viewportCentre.x, viewportCentre.y, 46, {
     },
 })
 
-const texture = Bodies.rectangle(0, 0, 5000, 5000, {
-    render: {
-        sprite: {
-            texture: '../images/space.jpg'
+function addTexture(x, y) {
+    return Bodies.rectangle(x, y, 3840, 2160, {
+        render: {
+            sprite: {
+                texture: '../images/space2.jpg'
+            }
+        },
+        collisionFilter: {
+            mask: defaultStatus
         }
-    },
-    collisionFilter: {
-        mask: defaultStatus
-    }
-})
+    })
+}
+
 
 const body = [
     // ...ground,
     // box,
-    texture,
+    addTexture(0, 0),
+    addTexture(3840, 0),
+    addTexture(2160, 0),
+    addTexture(3840, 2160),
     shooter
 ];
 
@@ -146,8 +152,7 @@ Events.on(engine, "afterUpdate", function() {
         y: shooter.position.y - viewportCentre.y
     });
 
-wa3})
-conw 4sole.log(render.context )
+})
 setInterval(() => {
     console.log(shooter)
 }, 3000)
